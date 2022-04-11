@@ -27,6 +27,10 @@ void FMyToolBoxModule::StartupModule()
 		FCanExecuteAction());
 
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FMyToolBoxModule::RegisterMenus));
+
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(MyToolBoxTabName, FOnSpawnTab::CreateRaw(this, &FMyToolBoxModule::OnSpawnPluginTab))
+		.SetDisplayName(LOCTEXT("MyToolBox.Title", "MyToolBox"))
+		.SetMenuType(ETabSpawnerMenuType::Hidden);
 }
 
 void FMyToolBoxModule::ShutdownModule()
@@ -45,13 +49,26 @@ void FMyToolBoxModule::ShutdownModule()
 
 void FMyToolBoxModule::PluginButtonClicked()
 {
-	// Put your "OnButtonClicked" stuff here
-	FText DialogText = FText::Format(
-							LOCTEXT("PluginButtonDialogText", "Add code to {0} in {1} to override this button's actions"),
-							FText::FromString(TEXT("FMyToolBoxModule::PluginButtonClicked()")),
-							FText::FromString(TEXT("MyToolBox.cpp"))
-					   );
-	FMessageDialog::Open(EAppMsgType::Ok, DialogText);
+	FGlobalTabmanager::Get()->TryInvokeTab(MyToolBoxTabName);
+}
+
+TSharedRef<SDockTab> FMyToolBoxModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTabArgs)
+{
+	const FText OwnerWindowName = SpawnTabArgs.GetOwnerWindow().IsValid() ? SpawnTabArgs.GetOwnerWindow()->GetTitle() : LOCTEXT("MyToolBox.None", "None");
+	const FText WidgetText = FText::Format(LOCTEXT("MyToolBox.MainWindow.Text", "MyToolBox in {0}"), OwnerWindowName);
+
+    return SNew(SDockTab)
+        .TabRole(ETabRole::NomadTab)
+        [
+            // Put your tab content here!
+            SNew(SBox)
+            .HAlign(HAlign_Center)
+        .VAlign(VAlign_Center)
+        [
+            SNew(STextBlock)
+            .Text(WidgetText)
+        ]
+        ];
 }
 
 void FMyToolBoxModule::RegisterMenus()
