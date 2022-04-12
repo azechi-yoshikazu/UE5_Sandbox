@@ -1,10 +1,13 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MyToolBox.h"
-#include "MyToolBoxStyle.h"
-#include "MyToolBoxCommands.h"
+// Engine
 #include "Misc/MessageDialog.h"
 #include "ToolMenus.h"
+// MyToolBox
+#include "MyToolBoxStyle.h"
+#include "MyToolBoxCommands.h"
+#include "SMyToolBox.h"
 
 static const FName MyToolBoxTabName("MyToolBox");
 
@@ -60,14 +63,8 @@ TSharedRef<SDockTab> FMyToolBoxModule::OnSpawnPluginTab(const FSpawnTabArgs& Spa
     return SNew(SDockTab)
         .TabRole(ETabRole::NomadTab)
         [
-            // Put your tab content here!
-            SNew(SBox)
-            .HAlign(HAlign_Center)
-        .VAlign(VAlign_Center)
-        [
-            SNew(STextBlock)
-            .Text(WidgetText)
-        ]
+			SNew(SMyToolBox)
+			.Text(LOCTEXT("MyToolBox.Title", "My Tool Box"))
         ];
 }
 
