@@ -25,6 +25,9 @@ public:
     void Construct(const FArguments& InArgs);
 
 public:
+    static const FName TabName;
+
+    static void RegisterTabSpawner();
     static TSharedRef<SDockTab> Spawn(const FSpawnTabArgs& InArgs);
 
 private:

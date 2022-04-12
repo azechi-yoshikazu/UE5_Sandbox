@@ -9,8 +9,6 @@
 #include "MyToolBoxCommands.h"
 #include "SMyToolBox.h"
 
-static const FName MyToolBoxTabName("MyToolBox");
-
 #define LOCTEXT_NAMESPACE "MyToolBox"
 
 void FMyToolBoxModule::StartupModule()
@@ -31,9 +29,7 @@ void FMyToolBoxModule::StartupModule()
 
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FMyToolBoxModule::RegisterMenus));
 
-	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(MyToolBoxTabName, FOnSpawnTab::CreateStatic(&SMyToolBox::Spawn))
-		.SetDisplayName(LOCTEXT("MyToolBox.Title", "MyToolBox"))
-		.SetMenuType(ETabSpawnerMenuType::Hidden);
+	SMyToolBox::RegisterTabSpawner();
 }
 
 void FMyToolBoxModule::ShutdownModule()
@@ -52,7 +48,7 @@ void FMyToolBoxModule::ShutdownModule()
 
 void FMyToolBoxModule::PluginButtonClicked()
 {
-	FGlobalTabmanager::Get()->TryInvokeTab(MyToolBoxTabName);
+	FGlobalTabmanager::Get()->TryInvokeTab(SMyToolBox::TabName);
 }
 
 void FMyToolBoxModule::RegisterMenus()
