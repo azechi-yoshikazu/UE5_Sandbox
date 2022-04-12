@@ -11,7 +11,7 @@
 
 static const FName MyToolBoxTabName("MyToolBox");
 
-#define LOCTEXT_NAMESPACE "FMyToolBoxModule"
+#define LOCTEXT_NAMESPACE "MyToolBox"
 
 void FMyToolBoxModule::StartupModule()
 {
@@ -31,7 +31,7 @@ void FMyToolBoxModule::StartupModule()
 
 	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FMyToolBoxModule::RegisterMenus));
 
-	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(MyToolBoxTabName, FOnSpawnTab::CreateRaw(this, &FMyToolBoxModule::OnSpawnPluginTab))
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(MyToolBoxTabName, FOnSpawnTab::CreateStatic(&SMyToolBox::Spawn))
 		.SetDisplayName(LOCTEXT("MyToolBox.Title", "MyToolBox"))
 		.SetMenuType(ETabSpawnerMenuType::Hidden);
 }
@@ -53,19 +53,6 @@ void FMyToolBoxModule::ShutdownModule()
 void FMyToolBoxModule::PluginButtonClicked()
 {
 	FGlobalTabmanager::Get()->TryInvokeTab(MyToolBoxTabName);
-}
-
-TSharedRef<SDockTab> FMyToolBoxModule::OnSpawnPluginTab(const FSpawnTabArgs& SpawnTabArgs)
-{
-	const FText OwnerWindowName = SpawnTabArgs.GetOwnerWindow().IsValid() ? SpawnTabArgs.GetOwnerWindow()->GetTitle() : LOCTEXT("MyToolBox.None", "None");
-	const FText WidgetText = FText::Format(LOCTEXT("MyToolBox.MainWindow.Text", "MyToolBox in {0}"), OwnerWindowName);
-
-    return SNew(SDockTab)
-        .TabRole(ETabRole::NomadTab)
-        [
-			SNew(SMyToolBox)
-			.Text(LOCTEXT("MyToolBox.Title", "My Tool Box"))
-        ];
 }
 
 void FMyToolBoxModule::RegisterMenus()

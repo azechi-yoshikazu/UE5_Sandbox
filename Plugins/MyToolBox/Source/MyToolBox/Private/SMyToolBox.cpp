@@ -9,6 +9,7 @@
 #define LOCTEXT_NAMESPACE "MyToolBox"
 
 SMyToolBox::SMyToolBox()
+    : TabManager(nullptr)
 {
 
 }
@@ -20,6 +21,8 @@ SMyToolBox::~SMyToolBox()
 
 void SMyToolBox::Construct(const FArguments& InArgs)
 {
+    TabManager = InArgs._TabManager;
+
     ChildSlot
     [
         SNew(SBox)
@@ -30,6 +33,24 @@ void SMyToolBox::Construct(const FArguments& InArgs)
             .Text(InArgs._Text)
         ]
     ];
+}
+
+TSharedRef<SDockTab> SMyToolBox::Spawn(const FSpawnTabArgs& InArgs)
+{
+    auto NomadTab = 
+        SNew(SDockTab)
+        .TabRole(ETabRole::NomadTab);
+
+    auto TabManager = FGlobalTabmanager::Get()->NewTabManager(NomadTab);
+    
+    auto MainWidget = 
+        SNew(SMyToolBox)
+        .TabManager(TabManager)
+        .Text(LOCTEXT("MyToolBox.Title", "My Tool Box"));
+
+    NomadTab->SetContent(MainWidget);
+
+    return NomadTab;
 }
 
 #undef LOCTEXT_NAMESPACE
