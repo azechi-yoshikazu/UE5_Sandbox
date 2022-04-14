@@ -83,7 +83,7 @@ TSharedRef<SDockTab> SMyToolBox::Spawn(const FSpawnTabArgs& InArgs)
     auto MainWidget = 
         SNew(SMyToolBox)
         .TabManager(TabManager)
-        .Text(LOCTEXT("MyToolBox.Title", "My Tool Box"));
+        .Text(LOCTEXT("MyToolBox.Title", "MyToolBox"));
 
     NomadTab->SetContent(MainWidget);
 
