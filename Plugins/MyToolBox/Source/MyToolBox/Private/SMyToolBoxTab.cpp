@@ -27,11 +27,36 @@ namespace MyToolBox
 
                 CommandExecutor = CommandExecutors.Num() > 0 ? CommandExecutors[0] : nullptr;
 
-                ChildSlot
+                static const FMargin CommandButtonPadding = FMargin(10.0f, 5.0f);
+
+                auto HorizontalBox =
+                    SNew(SHorizontalBox);
+
+                HorizontalBox->AddSlot()
+                    .AutoWidth()
+                    .VAlign(VAlign_Top)
+                    .Padding(CommandButtonPadding)
                     [
                         SNew(SButton)
-                        .Text(LOCTEXT("MyToolBox.Debug.ShowFPS", "Toggle FPS"))
+                        .Text(LOCTEXT("Debugger.ShowFPS.Text", "Show FPS"))
+                        .ToolTipText(LOCTEXT("Debugger.ShowFPS.ToolTip", "Toggle FPS for debug. ( It's same to execute command as \"stat fps\". )"))
                         .OnClicked_Raw<SDebuggerWidget, TCHAR*>(this, &SDebuggerWidget::ExecuteCommand, TEXT("stat fps"))
+                    ];
+                
+                HorizontalBox->AddSlot()
+                    .AutoWidth()
+                    .VAlign(VAlign_Top)
+                    .Padding(CommandButtonPadding)
+                    [
+                        SNew(SButton)
+                        .Text(LOCTEXT("Debugger.ShowStat.Text", "Show Stat"))
+                        .ToolTipText(LOCTEXT("Debugger.ShowStat.ToolTip", "Toggle stat for debug. ( It's same to execute command as \"stat unit\". )"))
+                        .OnClicked_Raw<SDebuggerWidget, TCHAR*>(this, &SDebuggerWidget::ExecuteCommand, TEXT("stat unit"))
+                    ];
+
+                ChildSlot
+                    [
+                        HorizontalBox
                     ];
             }
 
@@ -62,14 +87,14 @@ namespace MyToolBox
                 {
                     return SNew(SDockTab)
                         .TabRole(ETabRole::PanelTab)
-                        .Label(LOCTEXT("MyToolBox.DebuggerTab.Title", "Debugger"))
+                        .Label(LOCTEXT("Debugger.Tab.Title", "Debugger"))
                         [
                             SNew(SDebuggerWidget)
                         ];
                 })
             )
-            .SetDisplayName(LOCTEXT("MyToolBox.DebuggerTab.DisplayName", "Debugger"))
-            .SetTooltipText(LOCTEXT("MyToolBox.DebuggerTab.Tooltip", "Open tab for debug."));
+            .SetDisplayName(LOCTEXT("Debugger.Tab.DisplayName", "Debugger"))
+            .SetTooltipText(LOCTEXT("Debugger.Tab.Tooltip", "Open tab for debug."));
         }
 
     };// namespace DebuggerTab
@@ -85,21 +110,21 @@ namespace MyToolBox
                 {
                     return SNew(SDockTab)
                         .TabRole(ETabRole::PanelTab)
-                        .Label(LOCTEXT("MyToolBox.UtilityTab.Title", "Utility"))
+                        .Label(LOCTEXT("Utility.Tab.Title", "Utility"))
                         [
                             SNew(SBox)
                             .VAlign(VAlign_Center)
                             .HAlign(HAlign_Center)
                             [
                                 SNew(STextBlock)
-                                .Text(LOCTEXT("MyToolBox.UtilityTab.Content", "This is Utility"))
+                                .Text(LOCTEXT("Utility.Tab.Content", "This is Utility"))
                             ]
                         ];
                 }
                     )
                 )
-                .SetDisplayName(LOCTEXT("MyToolBox.UtilityTab.DisplayName", "Utility"))
-                .SetTooltipText(LOCTEXT("MyToolBox.UtilityTab.Tooltip", "Open tab for utility."));
+                .SetDisplayName(LOCTEXT("Utility.Tab.DisplayName", "Utility"))
+                .SetTooltipText(LOCTEXT("Utility.Tab.Tooltip", "Open tab for utility."));
         }
 
     };// namespace UtilityTab
